@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: web_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./public:/var/www/html
+    depends_on:
+      - php
+      - db
+    networks:
+      - webnet
+
+  php:
+    build: .
+    container_name: web_php
+    restart: always
+    volumes:
+      - ./public:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./public/fpdf:/var/www/html/fpdf  # ✅ Añade esta línea para montar fpdf/
+     
+    networks:
+      - webnet
+
+
+  db:
+    image: mariadb:latest
+    container_name: web_mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: webdb
+      MYSQL_USER: webuser
+      MYSQL_PASSWORD: webpassword
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - webnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: web_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - webnet
+
+networks:
+  webnet:
+
+volumes:
+  db_data:
