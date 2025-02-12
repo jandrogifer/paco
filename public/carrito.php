@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); 
 include 'config.php';
 
 // Asegurar que $_SESSION['carrito'] es un array
@@ -63,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['producto_id'])) {
     </style>
 </head>
 <body>
+<?php include 'header.php'; ?>
 
     <h1>🛒 Carrito de Compras</h1>
 
@@ -89,3 +90,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['producto_id'])) {
 
 </body>
 </html>
+<?php include 'footer.php'; ?>
